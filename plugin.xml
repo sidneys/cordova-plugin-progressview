@@ -2,7 +2,7 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         id="de.neofonie.cordova.plugin.progressview"
-        version="1.0.0">
+        version="1.1.0">
 
     <name>Cordova Progress View</name>
     <description>Cordova/PhoneGap extension for displaying a native determinate progress dialog.</description>
@@ -56,6 +56,8 @@
 
         <header-file src="src/ios/MBProgressHUD.h"/>
         <source-file src="src/ios/MBProgressHUD.m"/>
+        
+        <source-file src="src/ios/libMRProgress.a"/>
 
     </platform>
 
