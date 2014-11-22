@@ -17,38 +17,46 @@
  * specific language governing permissions and limitations
  * under the License.
  *
-*/
+ */
 
 var exec = require('cordova/exec');
 
-function ProgressView() {}
-  
-  ProgressView.prototype.show = function (progressLabel, progressType, progressTheme) {
-      label = progressLabel || "Loading...";
-      type = progressType || "SPINNER";         // "SPINNER". "CIRCLE"
-      theme = progressTheme || "DEVICE_LIGHT";  // "TRADITIONAL", "DEVICE_DARK", "DEVICE_LIGHT", "HOLO_DARK", "HOLO_LIGHT"
-      
-      exec(null, null, 'ProgressView', 'show', [label, type, theme]);
-      return this;
-  };
-  
-  /**
-   * Hide the progress dialog
-   */
-  ProgressView.prototype.setProgress = function (progressPercentage) {
-      value = parseFloat(progressPercentage);
-      
-      exec(null, null, 'ProgressView', 'setProgress', [value]);
-      return this;
-  };
-  
-  /**
-   * Hide the progress dialog
-   */
-  ProgressView.prototype.hide = function () {
-      exec(null, null, 'ProgressView', 'hide', '');
-      return this;
-  };
-  
+module.exports = {
 
-module.exports = new ProgressView();
+    /**
+     * Shows a native determinate progress dialog.
+     *
+     * @param {String} progressLabel - Dialog Title, defaults to 'Please Wait...'
+     * @param {String} progressType - "SPINNER", "CIRCLE"
+     * @param {String} progressTheme -  (Android) "TRADITIONAL", "DEVICE_DARK", "DEVICE_LIGHT", "HOLO_DARK", "HOLO_LIGHT"
+     * @returns {*}
+     */
+    show: function (progressLabel, progressType, progressTheme) {
+        label = progressLabel || "Please Wait...";
+        type = progressType || "SPINNER";
+        theme = progressTheme || "DEVICE_LIGHT";
+
+        return exec(successCallback, null, 'ProgressView', 'show', [label, type, theme]);
+    },
+
+    /**
+     * Sets progress percentage as float-based fraction.
+     *
+     * @param {float} progressPercentage
+     * @returns {*}
+     */
+    setProgress: function (progressPercentage) {
+        value = parseFloat(progressPercentage);
+
+        return exec(successCallback, null, 'ProgressView', 'setProgress', [value]);
+    },
+
+    /**
+     * Hides native determinate progress dialog.
+     *
+     * @returns {*}
+     */
+    hide: function () {
+        return exec(successCallback, null, 'ProgressView', 'hide', '');
+    }
+};
