@@ -2,12 +2,12 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         id="de.neofonie.cordova.plugin.progressview"
-        version="1.2.0">
+        version="1.4.0">
 
-    <name>Cordova Progress View</name>
-    <description>Cordova/PhoneGap extension for displaying a native determinate progress dialog.</description>
+    <name>Cordova ProgressView</name>
+    <description>Cordova/PhoneGap extension for displaying a native, determinate progress dialog view. Uses MRProgress in iOS and native UI controls in Android.</description>
     <license>MIT</license>
-    <keywords>activity,indicator,loading,progress,loadingbar</keywords>
+    <keywords>activity,indicator,loading,progress,loadingbar,mrprogress,mbprogresshud</keywords>
     <repo>https://github.com/sidneys/cordova-plugin-progressview.git</repo>
     <issue>https://github.com/sidneys/cordova-plugin-progressview/issues</issue>
 
@@ -19,9 +19,31 @@
         <clobbers target="window.plugins.ProgressView"/>
     </js-module>
 
+    <!-- ios -->
+    <platform name="ios">
+
+        <config-file target="config.xml" parent="/*">
+            <feature name="ProgressView">
+                <param name="ios-package" value="ProgressView"/>
+            </feature>
+        </config-file>
+
+        <framework src="Foundation.framework"/>
+        <framework src="UIKit.framework"/>
+        <framework src="CoreGraphics.framework"/>
+        <framework src="QuartzCore.framework"/>
+        <framework src="Accelerate.framework"/>
+
+        <header-file src="src/ios/ProgressView.h"/>
+        <source-file src="src/ios/ProgressView.m"/>
+
+        <header-file src="src/ios/MRProgress/MRProgress.h"/>
+
+    </platform>
+
     <!-- android -->
     <platform name="android">
-        
+
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="ProgressView">
                 <param name="android-package" value="de.neofonie.cordova.plugin.progressview.ProgressView"/>
@@ -34,30 +56,6 @@
             <uses-permission name="android.permission.WRITE_EXTERNAL_STORAGE"/>
             <uses-permission name="android.permission.READ_PHONE_STATE"/>
         </config-file>
-
-    </platform>
-
-    <!-- ios -->
-    <platform name="ios">
-
-        <config-file target="config.xml" parent="/*">
-            <feature name="ProgressView">
-                <param name="ios-package" value="ProgressView"/>
-            </feature>
-        </config-file>
-
-        <framework src="Foundation.framework"/>
-        <framework src="CoreGraphics.framework"/>
-        <framework src="UIKit.framework"/>
-
-        <header-file src="src/ios/ProgressView.h"/>
-        <source-file src="src/ios/ProgressView.m"/>
-        <resource-file src="src/ios/ProgressView.bundle" />
-
-        <header-file src="src/ios/MBProgressHUD.h"/>
-        <source-file src="src/ios/MBProgressHUD.m"/>
-        
-        <source-file src="src/ios/libMRProgress.a"/>
 
     </platform>
 
