@@ -1,6 +1,14 @@
+//
+// 
+//  ProgressView.m
+//  Cordova ProgressView
+//
+//  Created by Sidney Bofah on 2014-11-20.
+//
+
 #import <Cordova/CDV.h>
 #import "ProgressView.h"
-#import "MBProgressHUD.h"
+#import "MRProgress.h"
 
 @implementation ProgressView
 @synthesize progressView;
@@ -8,95 +16,92 @@
 
 - (void)pluginInitialize
 {
-    NSLog (@"(ProgressView) Init");
+    NSLog (@"(Cordova ProgressView) (Init) OK");
 }
 
 
+
 /**
- *  DETERMINATE with LABEL
+ *  Show Dialog
  */
 
--(void)showDeterminateWithLabel:(CDVInvokedUrlCommand *)command {
-    
+-(void)show:(CDVInvokedUrlCommand *)command {
+
     // Get Arguments
     NSString* text = [command.arguments objectAtIndex:0];
-    
-    // Show
+    NSString* type = [command.arguments objectAtIndex:1];
+
+    // Set Defaults
+    if ([text length] == 0) {
+        text = @"Loading";
+    }
+
+    // Reset
     self.progressView = nil;
-    self.progressView = [MBProgressHUD showHUDAddedTo:self.webView.superview animated:YES];
-    
-    // Config
-    self.progressView.mode = MBProgressHUDModeDeterminate;
-    self.progressView.labelText = text;
-    self.progressView.dimBackground = YES;
-    
+
+    // Show
+    self.progressView = [MRProgressOverlayView showOverlayAddedTo:self.webView.window animated:YES];
+
+    // Set Text
+    self.progressView.titleLabelText = text;
+
+    // Set Type
+    if ([type isEqualToString: @"CIRCLE"]) {
+        self.progressView.mode = MRProgressOverlayViewModeDeterminateCircular;
+    } else {
+        self.progressView.mode = MRProgressOverlayViewModeDeterminateHorizontalBar;
+    }
+
     // Callback
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"(ProgressView) (Circle) Show"];
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"(Cordova ProgressView) (Show) OK"];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 
 
 /**
- * DETERMINATE BAR with LABEL
- */
-
-- (void)showDeterminateBarWithLabel:(CDVInvokedUrlCommand *)command {
-    
-    // Get Arguments
-    NSString* text = [command.arguments objectAtIndex:0];
-    
-    // Show
-    self.progressView = nil;
-    self.progressView = [MBProgressHUD showHUDAddedTo:self.webView.superview animated:YES];
-    
-    // Config
-    self.progressView.mode = MBProgressHUDModeDeterminateHorizontalBar;
-    self.progressView.labelText = text;
-    self.progressView.dimBackground = YES;
-    
-    // Callback
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"(ProgressView) (Bar) Show"];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-}
-
-
-/**
- * HIDE
+ *  Hide Dialog
  */
 
 - (void)hide:(CDVInvokedUrlCommand*)command
 {
-	if (!self.progressView) {
-		CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"(ProgressView) (Hide) Does not exist."];
-		[self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-		return;
-	}
-	[self.progressView hide:YES];
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"(ProgressView) (Hide)"];
+    if (!self.progressView) {
+
+        // Callback (Error)
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"(Cordova ProgressView) (Hide) ERROR: No dialog to hide."];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        return;
+    }
+
+    // Hide
+    [MRProgressOverlayView dismissOverlayForView:self.webView.window animated:YES];
+
+    // Callback
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"(Cordova ProgressView) (Hide) OK"];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 
+
 /**
- * PROGRESS
+ *  Set Progress
  */
 
-- (void)setProgress:(float)progress{
-    
-    // get value
-    int _progress = [progress intValue];
-    
-    // Some blocking logic...
-    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-        // Do something...
-        self.progressView.progress = _progress;
-        // Hide
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.progressView hideHUDForView:self.webView.superview animated:YES];
-        });
-    });    
-        
+- (void)setProgress:(CDVInvokedUrlCommand*)command
+{
+    // Get Arguments
+    NSNumber* _progress = nil;
+
+    // Massage types
+    _progress = [command.arguments objectAtIndex:0];
+    float progress = [_progress floatValue];
+
+    // Set Progress
+    [self.progressView setProgress:progress animated:YES];
+
+    // Callback
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"(Cordova ProgressView) (Set) OK"];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 @end
