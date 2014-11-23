@@ -7,7 +7,7 @@
 //
 
 #import <Cordova/CDV.h>
-#import "MRProgress.h"
+#import <MRProgress/MRProgress.h>
 
 
 @interface ProgressView: CDVPlugin {

@@ -7,8 +7,8 @@
 //
 
 #import <Cordova/CDV.h>
+#import <MRProgress/MRProgress.h>
 #import "ProgressView.h"
-#import "MRProgress.h"
 
 @implementation ProgressView
 @synthesize progressView;
