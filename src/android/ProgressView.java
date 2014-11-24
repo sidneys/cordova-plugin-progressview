@@ -42,16 +42,12 @@ public class ProgressView extends CordovaPlugin {
         if (this.cordova.getActivity().isFinishing()) {
             return true;
         }
-        switch (action) {
-            case "show":
-                this.show(args);
-                break;
-            case "hide":
-                this.hide();
-                break;
-            case "setProgress":
-                this.setProgress(args);
-                break;
+        if (action.equals("show")) {
+            this.show(args);
+        } else if (action.equals("hide")) {
+            this.hide();
+        } else if (action.equals("setProgress")) {
+            this.setProgress(args);
         }
         return true;
     }
