@@ -27,13 +27,13 @@ module.exports = {
      * Shows a native determinate progress dialog.
      *
      * @param {String} progressLabel - Dialog Title, defaults to 'Please Wait...'
-     * @param {String} progressType - "SPINNER", "CIRCLE"
+     * @param {String} progressType - "CIRCLE", "HORIZONTAL"
      * @param {String} progressTheme -  (Android) "TRADITIONAL", "DEVICE_DARK", "DEVICE_LIGHT", "HOLO_DARK", "HOLO_LIGHT"
      * @returns {*}
      */
     show: function (progressLabel, progressType, progressTheme) {
         label = progressLabel || "Please Wait...";
-        type = progressType || "SPINNER";
+        type = progressType || "";
         theme = progressTheme || "DEVICE_LIGHT";
 
         return exec(successCallback, null, 'ProgressView', 'show', [label, type, theme]);
