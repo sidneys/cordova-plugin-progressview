@@ -34,7 +34,7 @@
         <framework src="QuartzCore.framework"/>
         <framework src="Accelerate.framework"/>
 
-        <framework src="src/ios/MRProgress.framework"/>
+        <framework src="src/ios/MRProgress.framework" custom="true"/>
         
         <header-file src="src/ios/ProgressView.h"/>
         <source-file src="src/ios/ProgressView.m"/>
