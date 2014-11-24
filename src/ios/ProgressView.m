@@ -1,5 +1,5 @@
 //
-// 
+//
 //  ProgressView.m
 //  Cordova ProgressView
 //
@@ -26,6 +26,13 @@
  */
 
 -(void)show:(CDVInvokedUrlCommand *)command {
+
+    // Check State
+    if ((self.progressView) || ([[MRProgressOverlayView allOverlaysForView:self.webView.window] count])) {
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"(Cordova ProgressView) (Show) ERROR: Dialog already showing"];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        return;
+    }
 
     // Get Arguments
     NSString* text = [command.arguments objectAtIndex:0];
@@ -68,7 +75,7 @@
 - (void)hide:(CDVInvokedUrlCommand*)command
 {
     // Check State
-    if (!self.progressView) {
+    if ((!self.progressView) || (![[MRProgressOverlayView allOverlaysForView:self.webView.window] count])) {
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"(Cordova ProgressView) (Hide) ERROR: No dialog to hide"];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         return;
@@ -76,6 +83,7 @@
 
     // Hide
     [MRProgressOverlayView dismissOverlayForView:self.webView.window animated:YES];
+    self.progressView = nil;
 
     // Callback
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"(Cordova ProgressView) (Hide) OK"];
@@ -91,7 +99,7 @@
 - (void)setProgress:(CDVInvokedUrlCommand*)command
 {
     // Check State
-    if (!self.progressView) {
+    if ((!self.progressView) || (![[MRProgressOverlayView allOverlaysForView:self.webView.window] count])) {
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"(Cordova ProgressView) (setProgress) ERROR: No dialog to update"];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         return;
