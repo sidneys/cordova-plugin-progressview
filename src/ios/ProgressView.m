@@ -67,10 +67,9 @@
 
 - (void)hide:(CDVInvokedUrlCommand*)command
 {
+    // Check State
     if (!self.progressView) {
-
-        // Callback (Error)
-        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"(Cordova ProgressView) (Hide) ERROR: No dialog to hide."];
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"(Cordova ProgressView) (Hide) ERROR: No dialog to hide"];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         return;
     }
@@ -91,10 +90,17 @@
 
 - (void)setProgress:(CDVInvokedUrlCommand*)command
 {
+    // Check State
+    if (!self.progressView) {
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"(Cordova ProgressView) (setProgress) ERROR: No dialog to update"];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        return;
+    }
+
     // Get Arguments
     NSNumber* _progress = nil;
 
-    // Massage types
+    // Convert variable number types
     _progress = [command.arguments objectAtIndex:0];
     float progress = [_progress floatValue];
 

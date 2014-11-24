@@ -31,24 +31,24 @@ module.exports = {
      * @param {String} progressTheme -  (Android) "TRADITIONAL", "DEVICE_DARK", "DEVICE_LIGHT", "HOLO_DARK", "HOLO_LIGHT"
      * @returns {*}
      */
-    show: function (progressLabel, progressType, progressTheme) {
+    show: function (progressLabel, progressType, progressTheme, successCallback, errorCallback) {
         label = progressLabel || "Please Wait...";
         type = progressType || "";
         theme = progressTheme || "DEVICE_LIGHT";
 
-        return exec(successCallback, null, 'ProgressView', 'show', [label, type, theme]);
+        return exec(successCallback, errorCallback, 'ProgressView', 'show', [label, type, theme]);
     },
 
     /**
-     * Sets progress percentage as float-based fraction.
+     * Sets progress percentage via float-based fraction.
      *
      * @param {float} progressPercentage
      * @returns {*}
      */
-    setProgress: function (progressPercentage) {
+    setProgress: function (progressPercentage, successCallback, errorCallback) {
         value = parseFloat(progressPercentage);
 
-        return exec(successCallback, null, 'ProgressView', 'setProgress', [value]);
+        return exec(successCallback, errorCallback, 'ProgressView', 'setProgress', [value]);
     },
 
     /**
@@ -56,7 +56,8 @@ module.exports = {
      *
      * @returns {*}
      */
-    hide: function () {
-        return exec(successCallback, null, 'ProgressView', 'hide', '');
+    hide: function (successCallback, errorCallback) {
+        return exec(successCallback, errorCallback, 'ProgressView', 'hide', '');
     }
 };
+});
