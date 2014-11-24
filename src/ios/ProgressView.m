@@ -48,8 +48,10 @@
     // Set Type
     if ([type isEqualToString: @"CIRCLE"]) {
         self.progressView.mode = MRProgressOverlayViewModeDeterminateCircular;
-    } else {
+    } else if ([type isEqualToString: @"HORIZONTAL"]) {
         self.progressView.mode = MRProgressOverlayViewModeDeterminateHorizontalBar;
+    } else {
+        self.progressView.mode = MRProgressOverlayViewModeDeterminateCircular;
     }
 
     // Callback
