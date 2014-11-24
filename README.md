@@ -57,7 +57,7 @@ Shows a progress dialog.
 
 * params
  * progressLabel - Text description of current operation.
- * progressType - Type of dialog (circle, horizontal bar) -  "CIRCLE" (Default), "BAR"
+ * progressType - Type of dialog -  "CIRCLE" (Default), "HORIZONTAL"
  * progressTheme - Visual Theme (Android only) - "DEVICE_LIGHT" (Default), "TRADITIONAL", "DEVICE_DARK", "HOLO_DARK", "HOLO_LIGHT"
 
 ### setProgress()
