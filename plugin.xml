@@ -2,7 +2,7 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         id="de.neofonie.cordova.plugin.progressview"
-        version="2.5.1">
+        version="2.5.2">
 
     <name>Cordova ProgressView</name>
     <description>Cordova/PhoneGap extension for displaying a native, determinate progress dialog view. Uses MRProgress in iOS and native UI controls in Android.</description>
