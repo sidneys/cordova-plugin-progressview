@@ -12,15 +12,34 @@
 #import "ProgressView.h"
 
 @implementation ProgressView
-@synthesize progressView;
 
+
+/**
+ *  CONSTANT
+ */
+
+static NSString *const _PROGRESSVIEW_STYLE_HORIZONTAL = @"BAR";
+static NSString *const _PROGRESSVIEW_STYLE_CIRCLE = @"CIRCLE";
+static const double _PROGRESSVIEW_UPDATE_INTERVAL = 1.5;
+
+
+/**
+ *  INIT
+ */
 
 - (void)pluginInitialize
 {
     NSLog (@"(Cordova ProgressView) (Init) OK");
-}
+
+    [self.commandDelegate runInBackground:^{
+        [self createView];
+    }];
+};
 
 
+/***************************
+ *  PUBLIC
+ ***************************/
 
 /**
  *  Show Dialog
@@ -28,52 +47,33 @@
 
 -(void)show:(CDVInvokedUrlCommand *)command {
 
-    // Check State
-    if ((self.progressView) || ([[MRProgressOverlayView allOverlaysForView:self.webView.window] count])) {
-        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"(Cordova ProgressView) (Show) ERROR: Dialog already showing"];
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-        return;
-    }
+    // Init
+    CDVPluginResult* pluginResult;
 
     // Get Arguments
     NSString* label = [command.arguments objectAtIndex:0];
     NSString* shape = [command.arguments objectAtIndex:1];
-    BOOL indeterminate = [[command.arguments objectAtIndex:2] boolValue];
-    // Set Defaults
-    if ([label length] == 0) {
-        label = @" ";
-    }
+    BOOL isIndeterminate = [[command.arguments objectAtIndex:2] boolValue];
 
-
-    // Reset
-    self.progressView = nil;
-
-    // Show
-    self.progressView = [MRProgressOverlayView showOverlayAddedTo:self.webView.window animated:YES];
-
-    // Set Label
-    self.progressView.titleLabelText = label;
-
-    // Set Shape & Type
-    if (([shape isEqualToString: @"CIRCLE"])) {
-        if (indeterminate == true) {
-            self.progressView.mode = MRProgressOverlayViewModeIndeterminate;
+    // Set Style
+    if ([shape isEqualToString: _PROGRESSVIEW_STYLE_HORIZONTAL]) {
+        if (isIndeterminate) {
+            [self generateView:label viewMode:MRProgressOverlayViewModeIndeterminateSmall isVisible:YES];
         } else {
-            self.progressView.mode = MRProgressOverlayViewModeDeterminateCircular;
+            [self generateView:label viewMode:MRProgressOverlayViewModeDeterminateHorizontalBar isVisible:YES];
         }
-    } else if ([shape isEqualToString: @"BAR"]) {
-        if (indeterminate == true) {
-            self.progressView.mode = MRProgressOverlayViewModeIndeterminateSmall;
+    } else {
+        if (isIndeterminate) {
+            [self generateView:label viewMode:MRProgressOverlayViewModeIndeterminate isVisible:YES];
         } else {
-            self.progressView.mode = MRProgressOverlayViewModeDeterminateHorizontalBar;
+            [self generateView:label viewMode:MRProgressOverlayViewModeDeterminateCircular isVisible:YES];
         }
-    }
+    };
 
     // Callback
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"(Cordova ProgressView) (Show) OK"];
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"(Cordova ProgressView) (Show) OK"];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-}
-
+};
 
 
 /**
@@ -82,27 +82,20 @@
 
 - (void)setProgress:(CDVInvokedUrlCommand*)command
 {
-    // Check State
-    if ((!self.progressView) || (![[MRProgressOverlayView allOverlaysForView:self.webView.window] count])) {
-        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"(Cordova ProgressView) (setProgress) ERROR: No dialog to update"];
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-        return;
-    }
+    // Init
+    __block CDVPluginResult* pluginResult = nil;
 
     // Get Arguments
-    NSNumber* _progress = [command.arguments objectAtIndex:0];
+    __block NSNumber* progress = [command.arguments objectAtIndex:0];
 
-    // Convert variable number types
-    float progress = [_progress floatValue];
-
-    // Update Progress
-    [self.progressView setProgress:progress animated:YES];
-
-    // Callback
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"(Cordova ProgressView) (setProgress) OK"];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-}
-
+    // Execute
+    [self performBlock:^{
+        [self updateProgress:progress];
+        // Callback
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"(Cordova ProgressView) (setProgress) OK"];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    } afterDelay:_PROGRESSVIEW_UPDATE_INTERVAL];
+};
 
 
 /**
@@ -111,27 +104,20 @@
 
 - (void)setLabel:(CDVInvokedUrlCommand*)command
 {
-    // Check State
-    if ((!self.progressView) || (![[MRProgressOverlayView allOverlaysForView:self.webView.window] count])) {
-        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"(Cordova ProgressView) (setLabel) ERROR: No dialog to update."];
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-        return;
-    }
+    // Init
+    __block CDVPluginResult* pluginResult = nil;
 
     // Get Arguments
-    NSString* label = [command.arguments objectAtIndex:0];
+    __block NSString* label = [command.arguments objectAtIndex:0];
 
-    // Update Label
-    if ([label length] == 0) {
-        label = @" ";
-    }
-    self.progressView.titleLabelText = label;
-
-    // Callback
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"(Cordova ProgressView) (setLabel) OK"];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-}
-
+    // Execute
+    [self performBlock:^{
+        [self updateLabel:label];
+        // Callback
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"(Cordova ProgressView) (setLabel) OK"];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    } afterDelay:_PROGRESSVIEW_UPDATE_INTERVAL];
+};
 
 
 /**
@@ -140,22 +126,117 @@
 
 - (void)hide:(CDVInvokedUrlCommand*)command
 {
-    // Check State
-    if ((!self.progressView) || (![[MRProgressOverlayView allOverlaysForView:self.webView.window] count])) {
-        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"(Cordova ProgressView) (Hide) ERROR: No dialog to hide"];
+    // Init
+    __block CDVPluginResult* pluginResult;
+
+    // Execute
+    [self performBlock:^{
+        [self removeView];
+        // Callback
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"(Cordova ProgressView) (Hide) OK"];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    } afterDelay:_PROGRESSVIEW_UPDATE_INTERVAL];
+};
+
+
+
+/***************************
+ *  PRIVATE
+ ***************************/
+
+- (void)setVisible:(BOOL)visible
+{
+    if (visible == _isVisible) {
         return;
     }
+    _isVisible = visible;
 
-    // Hide
-    [MRProgressOverlayView dismissOverlayForView:self.webView.window animated:YES];
-    self.progressView = nil;
+};
 
-    // Callback
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"(Cordova ProgressView) (Hide) OK"];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+
+- (void)createView
+{
+    // Never animate the showing of the splash screen.
+    if (_progressView == nil) {
+        [self generateView:@"" viewMode:MRProgressOverlayViewModeDeterminateCircular isVisible:NO];
+    }
+};
+
+
+- (void)updateProgress:(NSNumber *)viewProgress
+{
+    float viewProgressFloat = [viewProgress floatValue];
+    [_progressView setProgress:viewProgressFloat animated:YES];
+};
+
+
+- (void)updateLabel:(NSString *)viewLabel
+{
+    [_progressView setTitleLabelText:viewLabel];
+};
+
+
+- (void)generateView:(NSString *)viewLabel viewMode:(MRProgressOverlayViewMode)viewMode isVisible:(BOOL)showView
+{
+
+    if ([viewLabel length] == 0) {
+        viewLabel = _labelDefault;
+    }
+
+    if (_progressView == nil) {
+        _progressView = [MRProgressOverlayView new];
+        _progressView.tag = 88;
+        [self.webView.superview.window addSubview:_progressView];
+    } else {
+
+        [_progressView setMode:viewMode];
+        [self updateLabel:viewLabel];
+
+        if (showView) {
+            [_progressView show:YES];
+            [self setVisible:YES];
+        } else {
+            [self setVisible:NO];
+        }
+
+
+    }
+};
+
+
+- (void)removeView
+{
+    [_progressView dismiss:YES completion:^(void){
+        [_progressView removeFromSuperview];
+        _progressView = nil;
+        [self setVisible:NO];
+    }];
+
+};
+
+
+- (BOOL)isVisible
+{
+    return _isVisible;
+};
+
+
+/***************************
+ *  UTILITY
+ ***************************/
+
+- (void)performBlock:(void (^)(void))block
+          afterDelay:(NSTimeInterval)delay
+{
+    block = [block copy];
+    [self performSelector:@selector(fireBlockAfterDelay:)
+               withObject:block
+               afterDelay:delay];
 }
 
 
+- (void)fireBlockAfterDelay:(void (^)(void))block {
+    block();
+}
 
 @end

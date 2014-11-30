@@ -12,9 +12,11 @@
 
 
 @interface ProgressView: CDVPlugin {
+    MRProgressOverlayView* _progressView;
+    BOOL _isVisible;
+    NSString* _labelDefault;
+    float _progressDefault;
 }
-
-@property (nonatomic, assign) MRProgressOverlayView* progressView;
 
 - (void)show:(CDVInvokedUrlCommand*)command;
 - (void)setProgress:(CDVInvokedUrlCommand*)command;
