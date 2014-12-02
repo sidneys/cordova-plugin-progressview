@@ -1,6 +1,0 @@
-framework module MRProgress {
-  umbrella header "MRProgress.h"
-
-  export *
-  module * { export * }
-}

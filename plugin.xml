@@ -2,7 +2,7 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         id="de.neofonie.cordova.plugin.progressview"
-        version="2.5.2">
+        version="3.0.0">
 
     <name>Cordova ProgressView</name>
     <description>Cordova/PhoneGap extension for displaying a native, determinate progress dialog view. Uses MRProgress in iOS and native UI controls in Android.</description>
@@ -34,7 +34,7 @@
         <framework src="QuartzCore.framework"/>
         <framework src="Accelerate.framework"/>
 
-        <framework src="src/ios/MRProgress.framework" custom="true"/>
+        <framework src="src/ios/M13Progress.framework" custom="true"/>
 
         <header-file src="src/ios/ProgressView.h"/>
         <source-file src="src/ios/ProgressView.m"/>

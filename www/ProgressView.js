@@ -3,7 +3,7 @@
 //  ProgressView.js
 //  Cordova ProgressView
 //
-//  Created by Sidney Bofah on 2014-11-21.
+//  Created by Sidney Bofah on 2014-12-01.
 //
 
 var exec = require('cordova/exec');
@@ -14,27 +14,27 @@ module.exports = {
      * Shows a native determinate progress dialog.
      *
      * @param {String} viewLabel - Dialog Title, defaults to 'Please Wait...'
-     * @param {String} viewShape - "CIRCLE", "HORIZONTAL"
-     * @param {String} isIndefinite - "CIRCLE", "HORIZONTAL"
-     * @param {String} viewThemeAndroid -  (Android only) "TRADITIONAL", "DEVICE_DARK", "DEVICE_LIGHT", "HOLO_DARK", "HOLO_LIGHT"
+     * @param {String} viewShape - "CIRCLE", "BAR"
+     * @param {String} isIndeterminate - True / False
+     * @param {String} themeAndroid -  (Android only) "TRADITIONAL", "DEVICE_DARK", "DEVICE_LIGHT", "HOLO_DARK", "HOLO_LIGHT"
      * @param successCallback
      * @param errorCallback
      * @returns {*}
      */
-    show: function (viewLabel, viewShape, isIndefinite, viewThemeAndroid, successCallback, errorCallback) {
+    show: function (viewLabel, viewShape, isIndeterminate, themeAndroid, successCallback, errorCallback) {
         label = viewLabel || "Please Wait...";
-        shape =  viewShape || "";
-        indefinite = isIndefinite || false;
-        theme = viewThemeAndroid || "DEVICE_LIGHT";
+        shape =  viewShape || "CIRCLE";
+        indeterminate = isIndeterminate || false;
+        theme = themeAndroid || "DEVICE_LIGHT";
 
-        return exec(successCallback, errorCallback, 'ProgressView', 'show', [label, shape, indefinite, theme]);
+        return exec(successCallback, errorCallback, 'ProgressView', 'show', [label, shape, indeterminate, theme]);
     },
     
 
     /**
      * Sets progress percentage via float-based fraction.
      *
-     * @param {float} progressPercentage
+     * @param {float} progress -  Progress as a fraction of zero (float)
      * @param successCallback
      * @param errorCallback
      * @returns {*}
@@ -49,7 +49,7 @@ module.exports = {
    /**
     * Updates the text label of an existing progress view, e.g. for feedback to the user.
     *
-    * @param {String} viewLabel
+    * @param {String} viewLabel - Text Label of Progress View
     * @param successCallback
     * @param errorCallback
     * @returns {*}

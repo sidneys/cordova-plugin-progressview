@@ -8,14 +8,14 @@
  ****************************************/
 
 #import <Cordova/CDV.h>
-#import <MRProgress/MRProgress.h>
+#import <M13Progress/M13Progress.h>
 
 
 @interface ProgressView: CDVPlugin {
-    MRProgressOverlayView* _progressView;
+    M13ProgressHUD *_progressView;
     BOOL _isVisible;
     NSString* _labelDefault;
-    float _progressDefault;
+    CGFloat _progressDefault;
 }
 
 - (void)show:(CDVInvokedUrlCommand*)command;
