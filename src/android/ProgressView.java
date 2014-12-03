@@ -88,7 +88,7 @@ public class ProgressView extends CordovaPlugin {
                 // Set Label
                 String label = " ";
                 try {
-                    if(argsObj.get(0) != null && !argsObj.get(0).isEmpty()){
+                    if(argsObj.getString(0) != null && !argsObj.getString(0).isEmpty()){
                         try {
                             label = argsObj.getString(0);
                         } catch (JSONException e) {
@@ -143,7 +143,7 @@ public class ProgressView extends CordovaPlugin {
 
                 // Show
                 ProgressView.progressViewObj = new ProgressDialog(cordova.getActivity(), theme);
-                ProgressView.progressViewObj.setProgressStyle(style);
+                ProgressView.progressViewObj.setProgressStyle(shape);
                 ProgressView.progressViewObj.setTitle("");
                 ProgressView.progressViewObj.setMessage(label.replaceAll("^\"|\"$", ""));
                 ProgressView.progressViewObj.setCancelable(false);
@@ -227,8 +227,16 @@ public class ProgressView extends CordovaPlugin {
                     callback.sendPluginResult(result);
                     return;
                 }
-
+                
                 // Get Arguments
+                JSONArray argsObj = null;
+                try {
+                    argsObj = new JSONArray(args);
+                } catch (JSONException e) {
+                    // e.printStackTrace();
+                }
+
+                // Update Label
                 String label = "";
                 try {
                     if (argsObj.get(0) != null) {
