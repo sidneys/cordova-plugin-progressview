@@ -164,16 +164,25 @@ static const double _PROGRESSVIEW_UPDATE_INTERVAL = 1.5;
 {
 
     if ([shape isEqualToString:_PROGRESSVIEW_STYLE_HORIZONTAL]){
-
-    _progressView = [[M13ProgressHUD alloc] initAndShowWithProgressView:[[M13ProgressViewBar alloc] init] progress:_progressDefault indeterminate:isIndeterminate status:viewLabel mask:M13ProgressHUDMaskTypeGradient inView:self.webView];
+        
+        _progressView = [[M13ProgressHUD alloc] initWithProgressView: [[M13ProgressViewBar alloc] init]];
         _progressView.statusPosition = M13ProgressViewBarPercentagePositionTop;
+        
     } else {
-        _progressView = [[M13ProgressHUD alloc] initAndShowWithProgressView:[[M13ProgressViewRing alloc] init] progress:_progressDefault indeterminate:isIndeterminate status:viewLabel mask:M13ProgressHUDMaskTypeGradient inView:self.webView];
+        
+        _progressView = [[M13ProgressHUD alloc] initWithProgressView: [[M13ProgressViewRing alloc] init]];
         _progressView.statusPosition = M13ProgressHUDStatusPositionBelowProgress;
+        
     }
-
+    
+    [self updateProgress: _progressDefault];
+    _progressView.status = viewLabel;
+    _progressView.maskType = M13ProgressHUDMaskTypeSolidColor;
+    _progressView.indeterminate = isIndeterminate;
     _progressView.progressViewSize = CGSizeMake(100.0, 100.0);
     _progressView.animationPoint = CGPointMake(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+    [self.webView addSubview: _progressView];
+    [_progressView show:true];
 
 
 };
