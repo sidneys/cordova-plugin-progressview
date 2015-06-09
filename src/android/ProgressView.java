@@ -284,7 +284,11 @@ public class ProgressView extends CordovaPlugin {
                 }
 
                 // Hide
-                ProgressView.progressViewObj.dismiss();
+		try {
+                    ProgressView.progressViewObj.dismiss();
+                } catch(Exception e) {
+                    // Some times, when app is closing throws and exception because not attached to window manager.
+                }	
                 ProgressView.progressViewObj = null;
 
                 // Callback
