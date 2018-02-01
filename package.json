@@ -1,0 +1,33 @@
+{
+  "name": "cordova-plugin-progressview",
+  "version": "1.0",
+  "description": "An Android Progress Dialog Plugin for Cordova",
+  "cordova": {
+    "id": "cordova-plugin-progressview",
+    "platforms": [
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sidneys/cordova-plugin-progressview"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.0.0"
+    }
+  ],
+  "author": {
+    "name": "prueba@gmail.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sidneys/cordova-plugin-progressview/issues"
+  },
+  "homepage": "https://github.com/sidneys/cordova-plugin-progressview#readme"
+}
