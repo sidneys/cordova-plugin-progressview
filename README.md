@@ -32,7 +32,7 @@ Small Plugin for displaying a native progress dialog. Ideal for synchronous oper
 
 Via Cordova CLI:
 ```bash
-cordova plugin add https://github.com/SidneyS/cordova-plugin-progressview.git
+cordova plugin add https://github.com/sidneys/cordova-plugin-progressview.git
 ```
 
 =======================
